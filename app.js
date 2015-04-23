@@ -23,6 +23,7 @@ var start = function(clientId) {
                     clientId: clientId,
                     url: json.data.link
                 });
+                childProcess.exec('rm ./animation.gif')
             })
             .catch(function(err) {
                 console.error(err.message);
