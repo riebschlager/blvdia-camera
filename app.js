@@ -25,6 +25,7 @@ var start = function(clientId) {
         var params = {
             Bucket: 'blvdia',
             Key: clientId + '.gif',
+            ContentType: 'image/gif',
             Body: body
         };
 
