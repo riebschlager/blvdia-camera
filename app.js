@@ -20,10 +20,11 @@ var start = function(clientId) {
 
     exec.on('exit', function() {
         var s3 = new AWS.S3();
+        var body = fs.createReadStream(dir + 'animation.gif');
         var params = {
             Bucket: 'blvdia',
             Key: 'myKey',
-            Body: 'Hello!'
+            Body: body
         };
 
         s3.putObject(params, function(err, data) {
