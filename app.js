@@ -24,7 +24,7 @@ var start = function(clientId) {
         var body = fs.createReadStream(dir + 'animation.gif');
         var params = {
             Bucket: 'blvdia',
-            Key: 'myKey',
+            Key: clientId + '.gif',
             Body: body
         };
 
