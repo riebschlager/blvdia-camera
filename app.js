@@ -32,7 +32,7 @@ var start = function(clientId) {
             if (err) {
                 console.log(err);
             } else {
-                console.log("Successfully uploaded data to myBucket/myKey");
+                console.log(data);
             }
 
         });
