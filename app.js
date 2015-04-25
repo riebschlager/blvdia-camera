@@ -1,4 +1,5 @@
 var AWS = require('aws-sdk');
+var fs = require('fs');
 var dir = '/home/pi/blvdia-camera/';
 var config = require('./config');
 var childProcess = require('child_process');
