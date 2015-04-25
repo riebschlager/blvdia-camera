@@ -18,6 +18,23 @@ var start = function(clientId) {
     var exec = childProcess.exec(dir + 'img.sh');
 
     exec.on('exit', function() {
+        var s3 = new AWS.S3();
+        var params = {
+            Bucket: 'blvdia',
+            Key: 'myKey',
+            Body: 'Hello!'
+        };
+
+        s3.putObject(params, function(err, data) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Successfully uploaded data to myBucket/myKey");
+            }
+
+        });
+
+
         imgur.uploadFile(dir + 'animation.gif')
             .then(function(json) {
                 socket.emit('complete', {
