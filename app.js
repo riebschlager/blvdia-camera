@@ -33,23 +33,13 @@ var start = function(clientId) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(data);
-            }
-
-        });
-
-
-        imgur.uploadFile(dir + 'animation.gif')
-            .then(function(json) {
                 socket.emit('complete', {
                     clientId: clientId,
-                    url: json.data.link
+                    url: 'https://s3-us-west-2.amazonaws.com/blvdia/' + clientId + '.gif'
                 });
-                childProcess.exec('rm ' + dir + 'animation.gif')
-            })
-            .catch(function(err) {
-                console.error(err.message);
-            });
+                childProcess.exec('rm ' + dir + 'animation.gif');
+            }
+        });
     });
 
     exec.stdout.on('data', function(data) {
