@@ -5,7 +5,7 @@ mkdir /home/pi/blvdia-camera/tmp
 for i in `seq 1 5`;
     do
         fswebcam --no-banner -r 640x480 --jpeg 95 /home/pi/blvdia-camera/tmp/img$i.jpg
-        composite -geometry  +0+0 /home/pi/blvdia-camera/tmp/img$i.jpg /home/pi/blvdia-camera/overlay.png /home/pi/blvdia-camera/tmp/timg$i.jpg
+        composite -geometry +0+0 /home/pi/blvdia-camera/overlay.png /home/pi/blvdia-camera/tmp/img$i.jpg /home/pi/blvdia-camera/tmp/timg$i.jpg
         echo 'snap'
 done
 
