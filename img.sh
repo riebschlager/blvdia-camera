@@ -10,11 +10,11 @@ for i in `seq 1 5`;
 done
 
 convert -delay 50 -size 640x480 \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img1.jpg \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img2.jpg \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img3.jpg \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img4.jpg \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img5.jpg \
+    -page +0+0 /home/pi/blvdia-camera/tmp/timg1.jpg \
+    -page +0+0 /home/pi/blvdia-camera/tmp/timg2.jpg \
+    -page +0+0 /home/pi/blvdia-camera/tmp/timg3.jpg \
+    -page +0+0 /home/pi/blvdia-camera/tmp/timg4.jpg \
+    -page +0+0 /home/pi/blvdia-camera/tmp/timg5.jpg \
     -loop 0 /home/pi/blvdia-camera/animation.gif
 
 rm -rf /home/pi/blvdia-camera/tmp
