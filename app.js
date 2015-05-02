@@ -3,7 +3,6 @@ var AWS = require('aws-sdk');
 var childProcess = require('child_process');
 var config = require('./config');
 var fs = require('fs');
-var imgur = require('imgur');
 var io = require('socket.io-client');
 
 var socket = io.connect('blvdia.herokuapp.com', {
