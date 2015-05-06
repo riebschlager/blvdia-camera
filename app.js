@@ -15,6 +15,38 @@ socket.on('shutter', function(msg) {
   }
 });
 
+socket.on('preview', function(msg) {
+  if (msg.cameraId === config.cameraId) {
+    preview(msg.cameraId);
+  }
+})
+
+var preview = function(cameraId) {
+  var cmd = childProcess.exec(dir + 'preview.sh');
+  cmd.on('exit', function() {
+    var s3 = new AWS.S3();
+    var body = fs.createReadStream(dir + 'preview.jpg');
+    var timestamp = Date.now();
+    var params = {
+      Bucket: 'blvdia',
+      Key: 'camera-' + cameraId + '/' + timestamp + '.jpg',
+      ContentType: 'image/jpeg',
+      Body: body
+    };
+
+    s3.putObject(params, function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        socket.emit('preview-complete', {
+          cameraId: cameraId,
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia/camera-' + cameraId + '/' + timestamp + '.jpg'
+        });
+      }
+    });
+  });
+};
+
 var start = function(clientId) {
   var snapIndex = 0;
   var exec = childProcess.exec(dir + 'img.sh');
@@ -44,7 +76,7 @@ var start = function(clientId) {
 
   exec.stdout.on('data', function(data) {
     if (data.indexOf('snap') > -1) {
-      childProcess.exec('omxplayer /home/pi/blvdia-camera/snap.wav');
+      childProcess.exec('omxplayer ' + dir + 'snap.wav');
       socket.emit('snap', {
         index: snapIndex,
         clientId: clientId
