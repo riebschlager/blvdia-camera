@@ -44,6 +44,7 @@ var start = function(clientId) {
 
   exec.stdout.on('data', function(data) {
     if (data.indexOf('snap') > -1) {
+      childProcess.exec('omxplayer /home/pi/blvdia-camera/click.wav');
       socket.emit('snap', {
         index: snapIndex,
         clientId: clientId
