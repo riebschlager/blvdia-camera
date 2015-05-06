@@ -23,8 +23,8 @@ var start = function(clientId) {
     var s3 = new AWS.S3();
     var body = fs.createReadStream(dir + 'animation.gif');
     var params = {
-      Bucket: 'blvdia/passport-photo',
-      Key: clientId + '.gif',
+      Bucket: 'blvdia',
+      Key: 'passport-photo/' + clientId + '.gif',
       ContentType: 'image/gif',
       Body: body
     };
