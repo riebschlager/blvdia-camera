@@ -23,7 +23,7 @@ var start = function(clientId) {
     var s3 = new AWS.S3();
     var body = fs.createReadStream(dir + 'animation.gif');
     var params = {
-      Bucket: 'blvdia',
+      Bucket: 'blvdia/passport-photo',
       Key: clientId + '.gif',
       ContentType: 'image/gif',
       Body: body
@@ -35,7 +35,7 @@ var start = function(clientId) {
       } else {
         socket.emit('complete', {
           clientId: clientId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia/' + clientId + '.gif'
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia/passport-photo/' + clientId + '.gif'
         });
         childProcess.exec('rm ' + dir + 'animation.gif');
       }
