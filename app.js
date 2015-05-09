@@ -4,6 +4,14 @@ var childProcess = require('child_process');
 var config = require('./config');
 var fs = require('fs');
 var io = require('socket.io-client');
+var serialResult = childProcess.execSync('python /home/pi/blvdia-camera/serial.py');
+var serial = serialResult.toString();
+
+
+
+
+if(serial === '00000000cbe7b8a5') {
+}
 
 var socket = io.connect('blvdia.herokuapp.com', {
   port: 80
