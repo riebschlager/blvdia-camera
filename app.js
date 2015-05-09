@@ -98,7 +98,7 @@ var start = function(clientId) {
   });
 
   exec.stdout.on('data', function(data) {
-    if (data === 'snap') {
+    if (data.indexOf('snap') > -1) {
       childProcess.exec('omxplayer ' + dir + 'snap.wav');
       socket.emit('snap', {
         index: snapIndex,
