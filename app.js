@@ -120,3 +120,9 @@ var start = function(clientId) {
     }
   });
 };
+
+setTimeout(function() {
+  socket.emit('heartbeat', {
+    cameraId: cameraId
+  })
+}, 5000);
