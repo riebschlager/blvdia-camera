@@ -3,7 +3,7 @@ var AWS = require('aws-sdk');
 var childProcess = require('child_process');
 var fs = require('fs');
 var io = require('socket.io-client');
-var serialResult = childProcess.execSync('python /home/pi/blvdia-camera/serial.py');
+var serialResult = childProcess.execSync('python ' + dir + 'serial.py');
 var serial = serialResult.toString();
 var cameraId;
 
@@ -98,7 +98,7 @@ var start = function(clientId) {
   });
 
   exec.stdout.on('data', function(data) {
-    if (data.indexOf('snap') > -1) {
+    if (data === 'snap') {
       childProcess.exec('omxplayer ' + dir + 'snap.wav');
       socket.emit('snap', {
         index: snapIndex,
