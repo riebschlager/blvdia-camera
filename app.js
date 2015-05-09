@@ -1,16 +1,31 @@
 var dir = '/home/pi/blvdia-camera/';
 var AWS = require('aws-sdk');
 var childProcess = require('child_process');
-var config = require('./config');
 var fs = require('fs');
 var io = require('socket.io-client');
 var serialResult = childProcess.execSync('python /home/pi/blvdia-camera/serial.py');
 var serial = serialResult.toString();
+var cameraId;
 
-
-
-
-if(serial === '00000000cbe7b8a5') {
+switch (serial) {
+  case '00000000cbe7b8a5':
+    cameraId = 0;
+    break;
+  case '000000006c351194':
+    cameraId = 1;
+    break;
+  case '00000000c7a13f5d':
+    cameraId = 2;
+    break;
+  case '00000000a756dd26':
+    cameraId = 3;
+    break;
+  case '00000000cb68f0cf':
+    cameraId = 4;
+    break;
+  case '000000003b09e838':
+    cameraId = 5;
+    break;
 }
 
 var socket = io.connect('blvdia.herokuapp.com', {
@@ -18,13 +33,13 @@ var socket = io.connect('blvdia.herokuapp.com', {
 });
 
 socket.on('shutter', function(msg) {
-  if (msg.cameraId === config.cameraId) {
+  if (msg.cameraId === cameraId) {
     start(msg.clientId);
   }
 });
 
 socket.on('preview', function(msg) {
-  if (msg.cameraId === config.cameraId) {
+  if (msg.cameraId === cameraId) {
     preview(msg.cameraId);
   }
 })
