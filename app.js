@@ -32,6 +32,18 @@ var socket = io.connect('blvdia.herokuapp.com', {
   port: 80
 });
 
+socket.on('reboot', function(msg) {
+  if (msg.cameraId === cameraId) {
+    childProcess.exec('sudo reboot');
+  }
+});
+
+socket.on('shutdown', function(msg) {
+  if (msg.cameraId === cameraId) {
+    childProcess.exec('sudo shutdown -h now');
+  }
+});
+
 socket.on('shutter', function(msg) {
   if (msg.cameraId === cameraId) {
     start(msg.clientId);
