@@ -126,4 +126,4 @@ setInterval(function() {
     cameraId: cameraId,
     time: Date.now()
   });
-}, 5000);
+}, 1000);
