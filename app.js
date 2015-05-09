@@ -121,8 +121,8 @@ var start = function(clientId) {
   });
 };
 
-setTimeout(function() {
+setInterval(function() {
   socket.emit('heartbeat', {
     cameraId: cameraId
-  })
+  });
 }, 5000);
