@@ -124,6 +124,6 @@ var start = function(clientId) {
 setInterval(function() {
   socket.emit('heartbeat', {
     cameraId: cameraId,
-    time: new Date().now()
+    time: Date.now()
   });
 }, 5000);
