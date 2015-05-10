@@ -106,7 +106,7 @@ var start = function(clientId) {
           clientId: clientId,
           url: 'https://s3-us-west-2.amazonaws.com/blvdia/passport-photo/' + clientId + '.gif'
         });
-        childProcess.exec('rm ' + dir + 'animation.gif');
+        //childProcess.exec('rm ' + dir + 'animation.gif');
       }
     });
   });
