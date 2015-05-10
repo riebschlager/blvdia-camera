@@ -90,11 +90,11 @@ var start = function(clientId) {
 
   exec.on('exit', function() {
     var s3 = new AWS.S3();
-    var body = fs.createReadStream(dir + 'animation.gif');
+    var body = fs.createReadStream(dir + 'animation.mp4');
     var params = {
       Bucket: 'blvdia',
-      Key: 'passport-photo/' + clientId + '.gif',
-      ContentType: 'image/gif',
+      Key: 'passport-photo/' + clientId + '.mp4',
+      ContentType: 'video/mp4',
       Body: body
     };
 
@@ -104,9 +104,9 @@ var start = function(clientId) {
       } else {
         socket.emit('complete', {
           clientId: clientId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia/passport-photo/' + clientId + '.gif'
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia/passport-photo/' + clientId + '.mp4'
         });
-        //childProcess.exec('rm ' + dir + 'animation.gif');
+        childProcess.exec('rm ' + dir + 'animation.mp4');
       }
     });
   });
