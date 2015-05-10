@@ -65,8 +65,8 @@ var preview = function(cameraId) {
     var body = fs.createReadStream(dir + 'preview.jpg');
     var timestamp = Date.now();
     var params = {
-      Bucket: 'blvdia',
-      Key: 'camera-' + cameraId + '/' + timestamp + '.jpg',
+      Bucket: 'blvdia-camera-' + cameraId,
+      Key: timestamp + '.jpg',
       ContentType: 'image/jpeg',
       Body: body
     };
@@ -77,7 +77,7 @@ var preview = function(cameraId) {
       } else {
         socket.emit('preview-complete', {
           cameraId: cameraId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia/camera-' + cameraId + '/' + timestamp + '.jpg'
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/' + timestamp + '.jpg'
         });
       }
     });
@@ -92,8 +92,8 @@ var start = function(clientId) {
     var s3 = new AWS.S3();
     var body = fs.createReadStream(dir + 'animation.mp4');
     var params = {
-      Bucket: 'blvdia',
-      Key: 'passport-photo/' + clientId + '.mp4',
+      Bucket: 'blvdia-passport',
+      Key: clientId + '.mp4',
       ContentType: 'video/mp4',
       Body: body
     };
@@ -104,7 +104,7 @@ var start = function(clientId) {
       } else {
         socket.emit('complete', {
           clientId: clientId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia/passport-photo/' + clientId + '.mp4'
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
         });
         childProcess.exec('rm ' + dir + 'animation.mp4');
       }
