@@ -37,17 +37,20 @@ var socket = IO.connect('blvdia.herokuapp.com', {
 });
 
 socket.on('deploy', function() {
+  clearInterval(heartbeat);
   CP.execSync('cd ' + dir + ' && git pull');
   CP.exec('sudo reboot');
 });
 
 socket.on('reboot', function(msg) {
+  clearInterval(heartbeat);
   if (msg.cameraId === cameraId) {
     CP.exec('sudo reboot');
   }
 });
 
 socket.on('shutdown', function(msg) {
+  clearInterval(heartbeat);
   if (msg.cameraId === cameraId) {
     CP.exec('sudo shutdown -h now');
   }
@@ -123,7 +126,7 @@ function start(clientId) {
   });
 };
 
-setInterval(function() {
+var heartbeat = setInterval(function() {
   socket.emit('heartbeat', {
     cameraId: cameraId,
     time: Date.now()
