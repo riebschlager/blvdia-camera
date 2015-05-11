@@ -60,7 +60,7 @@ socket.on('preview', function(msg) {
   }
 })
 
-var preview = function(cameraId) {
+function preview(cameraId) {
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
@@ -82,30 +82,27 @@ var preview = function(cameraId) {
   });
 };
 
-var start = function(clientId) {
+function start(clientId) {
   var snapIndex = 0;
   var exec = CP.exec(dir + 'img.sh');
 
   exec.on('exit', function() {
-    var s3 = new AWS.S3();
     var body = FS.createReadStream(dir + 'animation.mp4');
-    var params = {
-      Bucket: 'blvdia-passport',
-      Key: clientId + '.mp4',
-      ContentType: 'video/mp4',
-      Body: body
-    };
-
-    s3.putObject(params, function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        socket.emit('complete', {
-          clientId: clientId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
-        });
-        CP.exec('rm ' + dir + 'animation.mp4');
+    var s3 = new AWS.S3({
+      params: {
+        Bucket: 'blvdia-passport',
+        Key: clientId + '.mp4',
+        ContentType: 'video/mp4',
+        Body: body
       }
+    });
+
+    s3.upload().send(function() {
+      socket.emit('complete', {
+        clientId: clientId,
+        url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
+      });
+      CP.exec('rm ' + dir + 'animation.mp4');
     });
   });
 
@@ -121,7 +118,7 @@ var start = function(clientId) {
   });
 };
 
-var heartbeat = setInterval(function() {
+setInterval(function() {
   socket.emit('heartbeat', {
     cameraId: cameraId,
     time: Date.now()
