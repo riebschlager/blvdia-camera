@@ -34,6 +34,12 @@ var socket = IO.connect('blvdia.herokuapp.com', {
   port: 80
 });
 
+socket.on('deploy', function() {
+  clearInterval(heartbeat);
+  CP.execSync('cd ' + dir + ' && git pull');
+  CP.exec('sudo reboot');
+});
+
 socket.on('reboot', function(msg) {
   if (msg.cameraId === cameraId) {
     clearInterval(heartbeat);
