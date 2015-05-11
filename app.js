@@ -65,7 +65,7 @@ var preview = function(cameraId) {
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
-    var body = FS.createReadStream(dir + 'preview.jpg').pipe(zlib.createGzip());
+    var body = FS.createReadStream(dir + 'preview.jpg').pipe(ZLIB.createGzip());
     var s3 = new AWS.S3({
       params: {
         Bucket: 'blvdia-camera-' + cameraId,
