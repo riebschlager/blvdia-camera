@@ -62,6 +62,7 @@ socket.on('preview', function(msg) {
 })
 
 var preview = function(cameraId) {
+  console.log('blvdia-camera-' + cameraId);
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
