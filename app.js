@@ -5,7 +5,6 @@ var AWS = require('aws-sdk');
 var CP = require('child_process');
 var FS = require('fs');
 var IO = require('socket.io-client');
-var ZLIB = require('zlib');
 
 var serialResult = CP.execSync('python ' + dir + 'serial.py');
 var serial = serialResult.toString();
@@ -65,7 +64,7 @@ var preview = function(cameraId) {
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
-    var body = FS.createReadStream(dir + 'preview.jpg').pipe(ZLIB.createGzip());
+    var body = FS.createReadStream(dir + 'preview.jpg');
     var s3 = new AWS.S3({
       params: {
         Bucket: 'blvdia-camera-' + cameraId,
