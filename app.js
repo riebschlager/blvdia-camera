@@ -1,10 +1,13 @@
-var dir = '/home/pi/blvdia-camera/';
 var AWS = require('aws-sdk');
-var childProcess = require('child_process');
-var fs = require('fs');
-var io = require('socket.io-client');
-var serialResult = childProcess.execSync('python ' + dir + 'serial.py');
+var CP = require('child_process');
+var FS = require('fs');
+var IO = require('socket.io-client');
+var ZLIB = require('zlib');
+
+var serialResult = CP.execSync('python ' + dir + 'serial.py');
 var serial = serialResult.toString();
+
+var dir = '/home/pi/blvdia-camera/';
 var cameraId;
 
 switch (serial) {
@@ -28,21 +31,21 @@ switch (serial) {
     break;
 }
 
-var socket = io.connect('blvdia.herokuapp.com', {
+var socket = IO.connect('blvdia.herokuapp.com', {
   port: 80
 });
 
 socket.on('reboot', function(msg) {
   if (msg.cameraId === cameraId) {
     clearInterval(heartbeat);
-    childProcess.exec('sudo reboot');
+    CP.exec('sudo reboot');
   }
 });
 
 socket.on('shutdown', function(msg) {
   if (msg.cameraId === cameraId) {
     clearInterval(heartbeat);
-    childProcess.exec('sudo shutdown -h now');
+    CP.exec('sudo shutdown -h now');
   }
 });
 
@@ -59,38 +62,34 @@ socket.on('preview', function(msg) {
 })
 
 var preview = function(cameraId) {
-  var cmd = childProcess.exec(dir + 'preview.sh');
+  var cmd = CP.exec(dir + 'preview.sh');
+  var timestamp = Date.now();
   cmd.on('exit', function() {
-    var s3 = new AWS.S3();
-    var body = fs.createReadStream(dir + 'preview.jpg');
-    var timestamp = Date.now();
-    var params = {
-      Bucket: 'blvdia-camera-' + cameraId,
-      Key: timestamp + '.jpg',
-      ContentType: 'image/jpeg',
-      Body: body
-    };
-
-    s3.putObject(params, function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        socket.emit('preview-complete', {
-          cameraId: cameraId,
-          url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/' + timestamp + '.jpg'
-        });
+    var body = FS.createReadStream(dir + 'preview.jpg').pipe(zlib.createGzip());
+    var s3 = new AWS.S3({
+      params: {
+        Bucket: 'blvdia-camera-' + cameraId,
+        Key: timestamp + '.jpg',
+        ContentType: 'image/jpeg',
+        Body: body
       }
+    });
+    s3.upload().send(function() {
+      socket.emit('preview-complete', {
+        cameraId: cameraId,
+        url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/' + timestamp + '.jpg'
+      });
     });
   });
 };
 
 var start = function(clientId) {
   var snapIndex = 0;
-  var exec = childProcess.exec(dir + 'img.sh');
+  var exec = CP.exec(dir + 'img.sh');
 
   exec.on('exit', function() {
     var s3 = new AWS.S3();
-    var body = fs.createReadStream(dir + 'animation.mp4');
+    var body = FS.createReadStream(dir + 'animation.mp4');
     var params = {
       Bucket: 'blvdia-passport',
       Key: clientId + '.mp4',
@@ -106,14 +105,14 @@ var start = function(clientId) {
           clientId: clientId,
           url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
         });
-        childProcess.exec('rm ' + dir + 'animation.mp4');
+        CP.exec('rm ' + dir + 'animation.mp4');
       }
     });
   });
 
   exec.stdout.on('data', function(data) {
     if (data.indexOf('snap') > -1) {
-      childProcess.exec('omxplayer ' + dir + 'snap.wav');
+      CP.exec('omxplayer ' + dir + 'snap.wav');
       socket.emit('snap', {
         index: snapIndex,
         clientId: clientId
