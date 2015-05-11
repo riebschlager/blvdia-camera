@@ -1,4 +1,5 @@
 var cameraId;
+var locked = false;
 var dir = '/home/pi/blvdia-camera/';
 
 var AWS = require('aws-sdk');
@@ -56,7 +57,7 @@ socket.on('shutdown', function(msg) {
 
 socket.on('shutter', function(msg) {
   if (msg.cameraId === cameraId) {
-    start(msg.clientId);
+    fireStart(msg.clientId);
   }
 });
 
@@ -66,7 +67,18 @@ socket.on('preview', function(msg) {
   }
 })
 
+function fireStart(clientId) {
+  if (!locked) {
+    start(clientId);
+  } else {
+    setTimeout(function() {
+      fireStart(clientId);
+    }, 100);
+  }
+}
+
 function preview(cameraId) {
+  locked = true;
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
@@ -84,6 +96,7 @@ function preview(cameraId) {
         cameraId: cameraId,
         url: 'https://s3-us-west-2.amazonaws.com/blvdia-preview/camera-' + cameraId + '.jpg?' + timestamp
       });
+      locked = false;
     });
   });
 };
