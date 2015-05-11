@@ -1,3 +1,6 @@
+var cameraId;
+var dir = '/home/pi/blvdia-camera/';
+
 var AWS = require('aws-sdk');
 var CP = require('child_process');
 var FS = require('fs');
@@ -6,9 +9,6 @@ var ZLIB = require('zlib');
 
 var serialResult = CP.execSync('python ' + dir + 'serial.py');
 var serial = serialResult.toString();
-
-var dir = '/home/pi/blvdia-camera/';
-var cameraId;
 
 switch (serial) {
   case '00000000cbe7b8a5':
@@ -62,7 +62,6 @@ socket.on('preview', function(msg) {
 })
 
 var preview = function(cameraId) {
-  console.log('blvdia-camera-' + cameraId);
   var cmd = CP.exec(dir + 'preview.sh');
   var timestamp = Date.now();
   cmd.on('exit', function() {
