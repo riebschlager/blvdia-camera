@@ -1,5 +1,3 @@
-// WHAT
-
 var cameraId;
 var dir = '/home/pi/blvdia-camera/';
 
@@ -75,8 +73,8 @@ function preview(cameraId) {
     var body = FS.createReadStream(dir + 'preview.jpg');
     var s3 = new AWS.S3({
       params: {
-        Bucket: 'blvdia-camera-' + cameraId,
-        Key: 'preview.jpg',
+        Bucket: 'blvdia-preview',
+        Key: 'camera-' + cameraId + '.jpg',
         ContentType: 'image/jpeg',
         Body: body
       }
@@ -84,7 +82,7 @@ function preview(cameraId) {
     s3.upload().send(function() {
       socket.emit('preview-complete', {
         cameraId: cameraId,
-        url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/preview.jpg?' + timestamp
+        url: 'https://s3-us-west-2.amazonaws.com/blvdia-preview/camera-' + cameraId + '.jpg?' + timestamp
       });
     });
   });
