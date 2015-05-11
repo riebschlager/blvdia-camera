@@ -76,7 +76,7 @@ function preview(cameraId) {
     var s3 = new AWS.S3({
       params: {
         Bucket: 'blvdia-camera-' + cameraId,
-        Key: timestamp + '.jpg',
+        Key: 'preview.jpg',
         ContentType: 'image/jpeg',
         Body: body
       }
@@ -84,7 +84,7 @@ function preview(cameraId) {
     s3.upload().send(function() {
       socket.emit('preview-complete', {
         cameraId: cameraId,
-        url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/' + timestamp + '.jpg'
+        url: 'https://s3-us-west-2.amazonaws.com/blvdia-camera-' + cameraId + '/preview.jpg?' + timestamp
       });
     });
   });
