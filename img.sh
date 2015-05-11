@@ -8,6 +8,6 @@ for i in `seq 0 4`;
         printf 'snap'
 done
 
-avconv -y -framerate 1 -f image2 -i /home/pi/blvdia-camera/tmp/img%d.jpg -b 65536k -vcodec libx264 /home/pi/blvdia-camera/animation.mp4
+avconv -y -framerate 1 -f image2 -i /home/pi/blvdia-camera/tmp/img%d.jpg -vcodec libx264 /home/pi/blvdia-camera/animation.mp4
 
 rm -rf /home/pi/blvdia-camera/tmp
