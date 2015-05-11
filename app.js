@@ -1,3 +1,5 @@
+// WHAT
+
 var cameraId;
 var dir = '/home/pi/blvdia-camera/';
 
