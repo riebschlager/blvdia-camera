@@ -117,7 +117,9 @@ function start(clientId) {
     });
 
     s3.upload().send(function() {
-      var elastictranscoder = new AWS.ElasticTranscoder({region: 'us-west-2'});
+      var elastictranscoder = new AWS.ElasticTranscoder({
+        region: 'us-west-2'
+      });
       var params = {
         PipelineId: '1431387501888-javchv',
         Input: {
@@ -132,14 +134,13 @@ function start(clientId) {
         if (err) {
           console.log(err, err.stack);
         } else {
-          console.log(data);
+          socket.emit('complete', {
+            clientId: clientId,
+            url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
+          });
+          CP.exec('rm ' + dir + 'animation.mp4');
         }
       });
-      socket.emit('complete', {
-        clientId: clientId,
-        url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
-      });
-      CP.exec('rm ' + dir + 'animation.mp4');
     });
   });
 
