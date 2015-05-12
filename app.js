@@ -117,6 +117,24 @@ function start(clientId) {
     });
 
     s3.upload().send(function() {
+      var elastictranscoder = new AWS.ElasticTranscoder();
+      var params = {
+        PipelineId: 'blvdia-gif',
+        Input: {
+          Key: clientId + '.mp4'
+        },
+        Output: {
+          Key: clientId + '.gif',
+          PresetId: '1351620000001-100200'
+        }
+      };
+      elastictranscoder.createJob(params, function(err, data) {
+        if (err) {
+          console.log(err, err.stack);
+        } else {
+          console.log(data);
+        }
+      });
       socket.emit('complete', {
         clientId: clientId,
         url: 'https://s3-us-west-2.amazonaws.com/blvdia-passport/' + clientId + '.mp4'
