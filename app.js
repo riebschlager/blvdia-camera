@@ -1,5 +1,5 @@
 var cameraId;
-var locked = false;
+var isCameraBusy = false;
 var dir = '/home/pi/blvdia-camera/';
 
 var AWS = require('aws-sdk');
@@ -7,8 +7,7 @@ var CP = require('child_process');
 var FS = require('fs');
 var IO = require('socket.io-client');
 
-var serialResult = CP.execSync('python ' + dir + 'serial.py');
-var serial = serialResult.toString();
+var serial = CP.execSync('python ' + dir + 'serial.py').toString();
 
 switch (serial) {
   case '00000000cbe7b8a5':
@@ -68,7 +67,7 @@ socket.on('preview', function(msg) {
 })
 
 function fireStart(clientId) {
-  if (!locked) {
+  if (!isCameraBusy) {
     start(clientId);
   } else {
     setTimeout(function() {
@@ -78,9 +77,8 @@ function fireStart(clientId) {
 }
 
 function preview(cameraId) {
-  locked = true;
+  isCameraBusy = true;
   var cmd = CP.exec(dir + 'preview.sh');
-  var timestamp = Date.now();
   cmd.on('exit', function() {
     var body = FS.createReadStream(dir + 'preview.jpg');
     var s3 = new AWS.S3({
@@ -94,9 +92,9 @@ function preview(cameraId) {
     s3.upload().send(function() {
       socket.emit('preview-complete', {
         cameraId: cameraId,
-        url: 'https://s3-us-west-2.amazonaws.com/blvdia-preview/camera-' + cameraId + '.jpg?' + timestamp
+        url: 'https://s3-us-west-2.amazonaws.com/blvdia-preview/camera-' + cameraId + '.jpg?' + Date.now()
       });
-      locked = false;
+      isCameraBusy = false;
     });
   });
 };
@@ -163,11 +161,11 @@ function checkJob(jobId, clientId) {
     if (err) {
       console.log(err, err.stack);
     } else {
-      console.log(data.Job.Output.Status);
       if (data.Job.Output.Status !== 'Complete') {
         checkJob(jobId, clientId);
       } else {
         socket.emit('complete', {
+          console.log(data);
           clientId: clientId,
           url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
         });
