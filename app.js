@@ -134,7 +134,6 @@ function start(clientId) {
         if (err) {
           console.log(err, err.stack);
         } else {
-          console.log(data);
           checkJob(data.Job.Id);
           socket.emit('complete', {
             clientId: clientId,
@@ -169,7 +168,10 @@ function checkJob(jobId) {
     if (err) {
       console.log(err, err.stack);
     } else {
-      console.log(data);
+      console.log(data.Job.Output.Status);
+      if (data.Job.Output.Status !== 'Complete') {
+        checkJob(jobId);
+      }
     }
   });
 }
