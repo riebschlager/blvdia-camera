@@ -135,11 +135,6 @@ function start(clientId) {
           console.log(err, err.stack);
         } else {
           checkJob(data.Job.Id);
-          socket.emit('complete', {
-            clientId: clientId,
-            url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
-          });
-          CP.exec('rm ' + dir + 'animation.mp4');
         }
       });
     });
@@ -171,6 +166,12 @@ function checkJob(jobId) {
       console.log(data.Job.Output.Status);
       if (data.Job.Output.Status !== 'Complete') {
         checkJob(jobId);
+      } else {
+        socket.emit('complete', {
+          clientId: clientId,
+          url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
+        });
+        CP.exec('rm ' + dir + 'animation.mp4');
       }
     }
   });
