@@ -134,7 +134,7 @@ function start(clientId) {
         if (err) {
           console.log(err, err.stack);
         } else {
-          checkJob(data.Job.Id);
+          checkJob(data.Job.Id, clientId);
         }
       });
     });
@@ -152,7 +152,7 @@ function start(clientId) {
   });
 };
 
-function checkJob(jobId) {
+function checkJob(jobId, clientId) {
   var elastictranscoder = new AWS.ElasticTranscoder({
     region: 'us-west-2'
   });
@@ -165,7 +165,7 @@ function checkJob(jobId) {
     } else {
       console.log(data.Job.Output.Status);
       if (data.Job.Output.Status !== 'Complete') {
-        checkJob(jobId);
+        checkJob(jobId, clientId);
       } else {
         socket.emit('complete', {
           clientId: clientId,
