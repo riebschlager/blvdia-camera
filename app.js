@@ -115,26 +115,27 @@ function start(clientId) {
     });
 
     s3.upload().send(function() {
-      var elastictranscoder = new AWS.ElasticTranscoder({
-        region: 'us-west-2'
-      });
-      var params = {
-        PipelineId: '1431387501888-javchv',
-        Input: {
-          Key: clientId + '.mp4'
-        },
-        Output: {
-          Key: clientId + '.gif',
-          PresetId: '1351620000001-100200'
-        }
-      };
-      elastictranscoder.createJob(params, function(err, data) {
-        if (err) {
-          console.log(err, err.stack);
-        } else {
-          checkJob(data.Job.Id, clientId);
-        }
-      });
+      console.log(clientId);
+      // var elastictranscoder = new AWS.ElasticTranscoder({
+      //   region: 'us-west-2'
+      // });
+      // var params = {
+      //   PipelineId: '1431387501888-javchv',
+      //   Input: {
+      //     Key: clientId + '.mp4'
+      //   },
+      //   Output: {
+      //     Key: clientId + '.gif',
+      //     PresetId: '1351620000001-100200'
+      //   }
+      // };
+      // elastictranscoder.createJob(params, function(err, data) {
+      //   if (err) {
+      //     console.log(err, err.stack);
+      //   } else {
+      //     checkJob(data.Job.Id, clientId);
+      //   }
+      // });
     });
   });
 
