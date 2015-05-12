@@ -164,7 +164,6 @@ function checkJob(jobId, clientId) {
       if (data.Job.Output.Status !== 'Complete') {
         checkJob(jobId, clientId);
       } else {
-        console.log(data);
         socket.emit('complete', {
           clientId: clientId,
           url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
