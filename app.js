@@ -119,7 +119,7 @@ function start(clientId) {
     s3.upload().send(function() {
       var elastictranscoder = new AWS.ElasticTranscoder({region: 'us-west-1'});
       var params = {
-        PipelineId: 'blvdia-gif',
+        PipelineId: '1431387501888-javchv',
         Input: {
           Key: clientId + '.mp4'
         },
