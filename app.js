@@ -134,7 +134,8 @@ function start(clientId) {
         if (err) {
           console.log(err, err.stack);
         } else {
-          checkJob(data.Id);
+          console.log(data);
+          checkJob(data.Job.Id);
           socket.emit('complete', {
             clientId: clientId,
             url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
