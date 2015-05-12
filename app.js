@@ -134,6 +134,7 @@ function start(clientId) {
         if (err) {
           console.log(err, err.stack);
         } else {
+          checkJob(data.Id);
           socket.emit('complete', {
             clientId: clientId,
             url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
@@ -155,6 +156,22 @@ function start(clientId) {
     }
   });
 };
+
+function checkJob(jobId) {
+  var elastictranscoder = new AWS.ElasticTranscoder({
+    region: 'us-west-2'
+  });
+  var params = {
+    Id: jobId
+  };
+  elastictranscoder.readJob(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+    } else {
+      console.log(data);
+    }
+  });
+}
 
 var heartbeat = setInterval(function() {
   socket.emit('heartbeat', {
