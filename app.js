@@ -117,7 +117,7 @@ function start(clientId) {
     });
 
     s3.upload().send(function() {
-      var elastictranscoder = new AWS.ElasticTranscoder({region: 'us-west-1'});
+      var elastictranscoder = new AWS.ElasticTranscoder({region: 'us-west-2'});
       var params = {
         PipelineId: '1431387501888-javchv',
         Input: {
