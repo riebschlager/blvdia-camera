@@ -161,6 +161,7 @@ function checkJob(jobId, clientId) {
     if (err) {
       console.log(err, err.stack);
     } else {
+      console.log(data);
       if (data.Job.Output.Status !== 'Complete') {
         checkJob(jobId, clientId);
       } else {
