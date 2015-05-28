@@ -63,8 +63,10 @@ function checkJob(jobId, clientId) {
 function start(clientId) {
     var snapIndex = 0;
     var exec = CP.exec(dir + 'img.sh');
+    CP.exec('omxplayer ' + dir + 'start.mp3');
 
     exec.on('exit', function() {
+        CP.exec('omxplayer ' + dir + 'done.mp3');
         var body = FS.createReadStream(dir + 'animation.mp4');
         var s3 = new AWS.S3({
             params: {
