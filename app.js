@@ -63,7 +63,6 @@ function checkJob(jobId, clientId) {
 function start(clientId) {
     var snapIndex = 0;
     var exec = CP.exec(dir + 'img.sh');
-    CP.exec('omxplayer ' + dir + 'start.mp3');
 
     exec.on('exit', function() {
         CP.exec('omxplayer ' + dir + 'done.mp3');
@@ -176,6 +175,7 @@ socket.on('shutdown', function(msg) {
 
 socket.on('shutter', function(msg) {
     if (msg.cameraId === cameraId) {
+        CP.exec('omxplayer ' + dir + 'start.mp3');
         fireStart(msg.clientId);
     }
 });
