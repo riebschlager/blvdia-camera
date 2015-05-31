@@ -66,38 +66,58 @@ function start(clientId) {
 
     exec.on('exit', function() {
         CP.exec('omxplayer ' + dir + 'done.mp3');
-        var body = FS.createReadStream(dir + 'animation.mp4');
+
+        var body = FS.createReadStream(dir + 'animation.gif');
+
         var s3 = new AWS.S3({
-            params: {
-                Bucket: 'blvdia-video',
-                Key: clientId + '.mp4',
-                ContentType: 'video/mp4',
-                Body: body
-            }
+            Bucket: 'blvdia-gif',
+            Key: clientId + '.gif',
+            ContentType: 'image/gif'
         });
 
-        s3.upload().send(function() {
-            var elastictranscoder = new AWS.ElasticTranscoder({
-                region: 'us-west-2'
+        s3.upload({
+            Body: body
+        }).
+        send(function() {
+            socket.emit('complete', {
+                clientId: clientId,
+                url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
             });
-            var params = {
-                PipelineId: '1431387501888-javchv',
-                Input: {
-                    Key: clientId + '.mp4'
-                },
-                Output: {
-                    Key: clientId + '.gif',
-                    PresetId: '1351620000001-100200'
-                }
-            };
-            elastictranscoder.createJob(params, function(err, data) {
-                if (err) {
-                    console.log(err, err.stack);
-                } else {
-                    checkJob(data.Job.Id, clientId);
-                }
-            });
+            CP.exec('rm ' + dir + 'animation.gif');
         });
+
+        // var body = FS.createReadStream(dir + 'animation.mp4');
+        // var s3 = new AWS.S3({
+        //     params: {
+        //         Bucket: 'blvdia-video',
+        //         Key: clientId + '.mp4',
+        //         ContentType: 'video/mp4',
+        //         Body: body
+        //     }
+        // });
+
+        // s3.upload().send(function() {
+        //     var elastictranscoder = new AWS.ElasticTranscoder({
+        //         region: 'us-west-2'
+        //     });
+        //     var params = {
+        //         PipelineId: '1431387501888-javchv',
+        //         Input: {
+        //             Key: clientId + '.mp4'
+        //         },
+        //         Output: {
+        //             Key: clientId + '.gif',
+        //             PresetId: '1351620000001-100200'
+        //         }
+        //     };
+        //     elastictranscoder.createJob(params, function(err, data) {
+        //         if (err) {
+        //             console.log(err, err.stack);
+        //         } else {
+        //             checkJob(data.Job.Id, clientId);
+        //         }
+        //     });
+        // });
     });
 
     exec.stdout.on('data', function(data) {
