@@ -78,7 +78,9 @@ function start(clientId) {
         s3.upload({
             Body: body
         }).
-        send(function() {
+        send(function(err, data) {
+            console.log(err);
+            console.log(data);
             socket.emit('complete', {
                 clientId: clientId,
                 url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
