@@ -69,13 +69,12 @@ function start(clientId) {
 
         var body = FS.createReadStream(dir + 'animation.gif');
 
-        var s3 = new AWS.S3({
-            Bucket: 'blvdia-gif',
-            Key: clientId + '.gif',
-            ContentType: 'image/gif'
-        });
+        var s3 = new AWS.S3();
 
         s3.upload({
+            Bucket: 'blvdia-gif',
+            Key: clientId + '.gif',
+            ContentType: 'image/gif',
             Body: body
         }).
         send(function(err, data) {
