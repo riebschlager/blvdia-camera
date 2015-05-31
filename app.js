@@ -78,7 +78,7 @@ function start(clientId) {
             Body: body
         }).
         send(function(err, data) {
-            console.log(data.location);
+            console.log(data);
             socket.emit('complete', {
                 clientId: clientId,
                 url: data.location
