@@ -10,55 +10,14 @@ var FS = require('fs');
 var IO = require('socket.io-client');
 
 var serial = CP.execSync('python ' + dir + 'serial.py').toString();
+var cameraIds = ['00000000cbe7b8a5', '000000006c351194', '00000000c7a13f5d', '00000000a756dd26', '00000000cb68f0cf', '000000003b09e838'];
+var cameraId = cameraIds.indexOf(serial);
 
-switch (serial) {
-    case '00000000cbe7b8a5':
-        cameraId = 0;
-        break;
-    case '000000006c351194':
-        cameraId = 1;
-        break;
-    case '00000000c7a13f5d':
-        cameraId = 2;
-        break;
-    case '00000000a756dd26':
-        cameraId = 3;
-        break;
-    case '00000000cb68f0cf':
-        cameraId = 4;
-        break;
-    case '000000003b09e838':
-        cameraId = 5;
-        break;
-}
+console.log(cameraId);
 
 var socket = IO.connect('blvdia.herokuapp.com', {
     port: 80
 });
-
-function checkJob(jobId, clientId) {
-    var elastictranscoder = new AWS.ElasticTranscoder({
-        region: 'us-west-2'
-    });
-    var params = {
-        Id: jobId
-    };
-    elastictranscoder.readJob(params, function(err, data) {
-        if (err) {
-            console.log(err, err.stack);
-        } else {
-            if (data.Job.Output.Status !== 'Complete') {
-                checkJob(jobId, clientId);
-            } else {
-                socket.emit('complete', {
-                    clientId: clientId,
-                    url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
-                });
-                CP.exec('rm ' + dir + 'animation.mp4');
-            }
-        }
-    });
-}
 
 function start(clientId) {
     var snapIndex = 0;
@@ -84,39 +43,6 @@ function start(clientId) {
             });
             CP.exec('rm ' + dir + 'animation.gif');
         });
-
-        // var body = FS.createReadStream(dir + 'animation.mp4');
-        // var s3 = new AWS.S3({
-        //     params: {
-        //         Bucket: 'blvdia-video',
-        //         Key: clientId + '.mp4',
-        //         ContentType: 'video/mp4',
-        //         Body: body
-        //     }
-        // });
-
-        // s3.upload().send(function() {
-        //     var elastictranscoder = new AWS.ElasticTranscoder({
-        //         region: 'us-west-2'
-        //     });
-        //     var params = {
-        //         PipelineId: '1431387501888-javchv',
-        //         Input: {
-        //             Key: clientId + '.mp4'
-        //         },
-        //         Output: {
-        //             Key: clientId + '.gif',
-        //             PresetId: '1351620000001-100200'
-        //         }
-        //     };
-        //     elastictranscoder.createJob(params, function(err, data) {
-        //         if (err) {
-        //             console.log(err, err.stack);
-        //         } else {
-        //             checkJob(data.Job.Id, clientId);
-        //         }
-        //     });
-        // });
     });
 
     exec.stdout.on('data', function(data) {
