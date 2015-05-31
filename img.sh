@@ -8,6 +8,6 @@ for i in `seq 0 4`;
         printf 'snap'
 done
 
-convert /home/pi/blvdia-camera/tmp/*.jpg -delay 50 -loop 0 -fuzz 50% -layers OptimizeFrame +matte +map /home/pi/blvdia-camera/animation.gif
+convert -delay 50 /home/pi/blvdia-camera/tmp/*.jpg -loop 0 -fuzz 50% -layers OptimizeFrame +matte +map /home/pi/blvdia-camera/animation.gif
 
 rm -rf /home/pi/blvdia-camera/tmp
