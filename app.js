@@ -13,8 +13,6 @@ var serial = CP.execSync('python ' + dir + 'serial.py').toString();
 var cameraIds = ['00000000cbe7b8a5', '000000006c351194', '00000000c7a13f5d', '00000000a756dd26', '00000000cb68f0cf', '000000003b09e838'];
 var cameraId = cameraIds.indexOf(serial);
 
-console.log(cameraId);
-
 var socket = IO.connect('blvdia.herokuapp.com', {
     port: 80
 });
@@ -75,15 +73,15 @@ function preview(cameraId) {
         var s3 = new AWS.S3({
             params: {
                 Bucket: 'blvdia-preview',
-                Key: 'camera-' + cameraId + '.jpg',
+                Key: 'camera-' + cameraId + '-' + Date.now() + '.jpg',
                 ContentType: 'image/jpeg',
                 Body: body
             }
         });
-        s3.upload().send(function() {
+        s3.upload().send(function(err, data) {
             socket.emit('preview-complete', {
                 cameraId: cameraId,
-                url: 'https://s3-us-west-2.amazonaws.com/blvdia-preview/camera-' + cameraId + '.jpg?' + Date.now()
+                url: data.Location
             });
             isCameraBusy = false;
         });
