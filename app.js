@@ -78,10 +78,9 @@ function start(clientId) {
             Body: body
         }).
         send(function(err, data) {
-            console.log(data);
             socket.emit('complete', {
                 clientId: clientId,
-                url: data.location
+                url: data.Location
             });
             CP.exec('rm ' + dir + 'animation.gif');
         });
