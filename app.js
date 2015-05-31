@@ -78,11 +78,9 @@ function start(clientId) {
             Body: body
         }).
         send(function(err, data) {
-            console.log(err);
-            console.log(data);
             socket.emit('complete', {
                 clientId: clientId,
-                url: 'https://s3-us-west-2.amazonaws.com/blvdia-gif/' + clientId + '.gif'
+                url: data.location
             });
             CP.exec('rm ' + dir + 'animation.gif');
         });
