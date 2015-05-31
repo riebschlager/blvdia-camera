@@ -16,6 +16,6 @@ done
 #     -page +0+0 /home/pi/blvdia-camera/tmp/img4.jpg \
 #     -loop 0 /home/pi/blvdia-camera/animation.gif
 
-convert -delay 50 -loop 0 -fuzz 5% -layers OptimizeFrame /home/pi/blvdia-camera/tmp/*.jpg /home/pi/blvdia-camera/animation.gif
+convert -delay 50 -loop 0 +matte +map /home/pi/blvdia-camera/tmp/*.jpg /home/pi/blvdia-camera/animation.gif
 
 rm -rf /home/pi/blvdia-camera/tmp
