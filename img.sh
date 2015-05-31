@@ -11,11 +11,11 @@ done
 # avconv -y -framerate 2 -f image2 -i /home/pi/blvdia-camera/tmp/img%d.jpg -vcodec libx264 /home/pi/blvdia-camera/animation.mp4
 
 convert -delay 50 -size 640x480 \
+    -page +0+0 /home/pi/blvdia-camera/tmp/img0.jpg \
     -page +0+0 /home/pi/blvdia-camera/tmp/img1.jpg \
     -page +0+0 /home/pi/blvdia-camera/tmp/img2.jpg \
     -page +0+0 /home/pi/blvdia-camera/tmp/img3.jpg \
     -page +0+0 /home/pi/blvdia-camera/tmp/img4.jpg \
-    -page +0+0 /home/pi/blvdia-camera/tmp/img5.jpg \
     -loop 0 -coalesce /home/pi/blvdia-camera/animation.gif
 
 rm -rf /home/pi/blvdia-camera/tmp
