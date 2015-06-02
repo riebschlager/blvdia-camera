@@ -17,6 +17,8 @@ var socket = IO.connect('blvdia.herokuapp.com', {
     port: 80
 });
 
+CP.exec('omxplayer ' + dir + 'done.mp3');
+
 function start(clientId) {
     var snapIndex = 0;
     var exec = CP.exec(dir + 'img.sh');
